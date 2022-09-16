@@ -22,9 +22,6 @@ jobs:
         java-version: '11'
         distribution: 'adopt'
 
-    - name: Build
-      run: mvn --batch-mode -DskipTests package
-
     - name: Test
       run: mvn --batch-mode -Dmaven.test.failure.ignore=true test
 
@@ -42,8 +39,8 @@ jobs:
       with:
         languages: ${{ matrix.language }}
 
-    # - name: Autobuild
-    #   uses: github/codeql-action/autobuild@v2
+    - name: Build
+      run: mvn --batch-mode -DskipTests package
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v2
