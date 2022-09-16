@@ -1,0 +1,52 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: 
+      - main
+      - ci/cd
+  pull_request:
+    branches:
+      - main
+      
+jobs:
+  build:
+    runs-on: ubuntu-latest
+  
+    steps:
+    - name: Clone Repo
+      uses: actions/checkout@v3
+
+    - name: Trivy Repo vulnerability scanner
+      uses: aquasecurity/trivy-action@master
+      with:
+        scan-type: 'fs'
+        ignore-unfixed: true
+        format: 'sarif'
+        output: 'trivy-repo-results.sarif'
+        severity: 'CRITICAL,HIGH,MEDIUM,LOW'
+
+    - name: Upload Trivy scan results to GitHub Security tab
+      uses: github/codeql-action/upload-sarif@v2
+      if: always()
+      with:
+        sarif_file: 'trivy-repo-results.sarif'
+
+    - name: Build Docker Image
+      run: docker build -t devops-wit-demo:${{ github.sha }} . . 
+
+    - name: Trivy docker vulnerability scanner
+      uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
+      with:
+        image-ref: 'devops-wit-demo:${{ github.sha }}'
+        format: 'template'
+        template: '@/contrib/sarif.tpl'
+        output: 'trivy-docker-results.sarif'
+        severity: 'CRITICAL,HIGH,MEDIUM,LOW'
+
+    - name: Upload Trivy Docker Scan results to GitHub Security tab
+      uses: github/codeql-action/upload-sarif@v2
+      if: always()
+      with:
+        sarif_file: 'trivy-docker-results.sarif'
+    
