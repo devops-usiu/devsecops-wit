@@ -36,9 +36,6 @@ jobs:
       with:
         category: "/language:${{matrix.language}}"   
 
-    - name: Dependency Review
-      uses: actions/dependency-review-action@v2
-
     - name: Trivy Repo vulnerability scanner
       uses: aquasecurity/trivy-action@master
       with:
