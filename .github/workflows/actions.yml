@@ -70,13 +70,7 @@ jobs:
         sarif_file: 'trivy-docker-results.sarif'
         category: docker-results
 
-    - name: Analyze with SonarCloud         
-      uses: SonarSource/sonarcloud-github-action@de2e56b42aa84d0b1c5b622644ac17e505c9a049
+    - name: SonarCloud Scan        
+      uses: SonarSource/sonarcloud-github-action@master
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      with:
-        # Additional arguments for the sonarcloud scanner
-        args:             
-          -Dsonar.projectKey=devsecops-wit
-          -Dsonar.organization=devops-wit
-          #-Dsonar.verbose= # optional, default is false   
