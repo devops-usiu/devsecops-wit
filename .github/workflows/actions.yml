@@ -3,8 +3,8 @@ name: CI/CD
 on: [push]
 
 jobs:
-  Tests:
-    name: Tests
+  tests:
+    name: tests
     runs-on: ubuntu-latest
     permissions: write-all
     steps:
@@ -39,7 +39,7 @@ jobs:
   build:
     name: build
     needs: 
-      - unittests
+      - tests
     runs-on: ubuntu-latest
     steps:
     - name: Checkout Repo
