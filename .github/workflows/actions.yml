@@ -25,9 +25,6 @@ jobs:
     - name: Clone Repo
       uses: actions/checkout@v3
 
-    - name: 'Dependency Review'
-      uses: actions/dependency-review-action@v2
-
     - name: Trivy Repo vulnerability scanner
       uses: aquasecurity/trivy-action@master
       with:
