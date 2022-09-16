@@ -22,7 +22,7 @@ jobs:
         java-version: '11'
         distribution: 'adopt'
 
-    - name: Test
+    - name: Unit Tests
       run: mvn --batch-mode -Dmaven.test.failure.ignore=true test
 
     - name: Test Report
@@ -34,6 +34,11 @@ jobs:
         reporter: java-junit
         fail-on-error: false
 
+    - name: SonarCloud Analyse        
+      run: mvn sonar:sonar -Dsonar.projectKey=devsecops-wit -Dsonar.organization=devops-wit -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v2
       with:
@@ -82,7 +87,3 @@ jobs:
         sarif_file: 'trivy-docker-results.sarif'
         category: docker-results
 
-    - name: SonarCloud Analyze        
-      run: ./mvnw -B verify sonar:sonar -Dsonar.projectKey=devsecops-wit -Dsonar.organization=devops-wit -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN
-      env:
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
