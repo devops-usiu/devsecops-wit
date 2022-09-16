@@ -21,6 +21,7 @@ jobs:
       with:
         java-version: '11'
         distribution: 'adopt'
+        cache: maven
 
     - name: Unit Tests
       run: mvn --batch-mode -Dmaven.test.failure.ignore=true test
@@ -34,11 +35,11 @@ jobs:
         reporter: java-junit
         fail-on-error: false
 
-    - name: SonarCloud Analyse        
+    - name: SonarCloud Analysis        
       run: mvn sonar:sonar -Dsonar.projectKey=devsecops-wit -Dsonar.organization=devops-wit -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        
+
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v2
       with:
