@@ -51,7 +51,7 @@ jobs:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
  
   build:
-    name: build_image
+    name: build
     needs: 
       - unittests
       - sonarqube
@@ -75,7 +75,7 @@ jobs:
 
   security_scans:
     name: Security Scans
-    needs: build_image
+    needs: build
     runs-on: ubuntu-latest
     permissions: 
       contents: read # for actions/checkout to fetch code
