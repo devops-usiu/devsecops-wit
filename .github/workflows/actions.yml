@@ -39,8 +39,8 @@ jobs:
       with:
         languages: ${{ matrix.language }}
 
-    - name: Build
-      run: mvn --batch-mode -DskipTests package
+    - name: Autobuild
+      uses: github/codeql-action/autobuild@v2
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v2
