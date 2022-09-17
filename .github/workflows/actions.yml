@@ -22,7 +22,7 @@ jobs:
         ignore-unfixed: true
         format: 'sarif'
         output: 'trivy-repo-results.sarif'
-        severity: 'CRITICAL,HIGH,MEDIUM,LOW'
+        severity: 'CRITICAL'
 
     - name: Upload Trivy scan results to GitHub Security tab
       uses: github/codeql-action/upload-sarif@v2
@@ -79,20 +79,31 @@ jobs:
     - name: Checkout Repo
       uses: actions/checkout@v3
 
+    - name: Configure Credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-2
+
+    - name: Login to Ecr Repository
+      id: login-to-ecr
+      uses: aws-actions/amazon-ecr-login@v1
+
     - name: Maven Build
       run: mvn --batch-mode -DskipTests package
 
     - name: Build Docker Image
-      run: docker build -t devops-wit-demo:${{ github.sha }} . 
+      run: docker build -t ${{ secrets.BACKEND_ECR_REPOSITORY }}:${{ github.sha }} . 
 
     - name: Docker vulnerability scanner
       uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
       with:
-        image-ref: 'devops-wit-demo:${{ github.sha }}'
+        image-ref: '${{ secrets.BACKEND_ECR_REPOSITORY }}:${{ github.sha }}'
         format: 'template'
         template: '@/contrib/sarif.tpl'
         output: 'trivy-docker-results.sarif'
-        severity: 'CRITICAL,HIGH,MEDIUM,LOW'
+        severity: 'CRITICAL'
         vuln-type: 'library'
 
     - name: Upload Trivy Docker Scan results to GitHub Security tab
@@ -101,21 +112,7 @@ jobs:
       with:
         sarif_file: 'trivy-docker-results.sarif'
         category: docker-results
-
-    - name: Configure Credentials
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: us-east-1
-
-    - name: Login to Ecr Repository
-      id: login-to-ecr
-      uses: aws-actions/amazon-ecr-login@v1
-
+    
     - name: Deploy image to Ecr Repository
-      env:
-        ECR_REGISTRY: ${{ steps.login-to-ecr.outputs.registry }}
-        ECR_REPOSITORY: ${{ secrets.BACKEND_ECR_REPOSITORY }}
       run: |
-        docker push ${{ secrets.BACKEND_ECR_REPOSITORY }}/devops-wit-demo:${{ github.sha }}
+        docker push ${{ secrets.BACKEND_ECR_REPOSITORY }}:${{ github.sha }}
