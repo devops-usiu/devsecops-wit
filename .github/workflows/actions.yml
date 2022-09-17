@@ -85,9 +85,9 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: us-east-2
 
-    - name: Login to Ecr Repository
-      id: login-to-ecr
-      uses: aws-actions/amazon-ecr-login@v1
+    # - name: Login to Ecr Repository
+    #   id: login-to-ecr
+    #   uses: aws-actions/amazon-ecr-login@v1
 
     - name: Maven Build
       run: mvn --batch-mode -DskipTests package
@@ -111,6 +111,6 @@ jobs:
         sarif_file: 'trivy-docker-results.sarif'
         category: docker-results
     
-    - name: Deploy image to Ecr Repository
-      run: |
-        docker push ${{ secrets.BACKEND_ECR_REPOSITORY }}:${{ github.sha }}
+    # - name: Deploy image to Ecr Repository
+    #   run: |
+    #     docker push ${{ secrets.BACKEND_ECR_REPOSITORY }}:${{ github.sha }}
