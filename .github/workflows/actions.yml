@@ -117,4 +117,4 @@ jobs:
         ECR_REGISTRY: ${{ steps.login-to-ecr.outputs.registry }}
         ECR_REPOSITORY: ${{ secrets.BACKEND_ECR_REPOSITORY }}
       run: |
-        docker push devops-wit-demo:${{ github.sha }}
+        docker push ${{ secrets.BACKEND_ECR_REPOSITORY }}/devops-wit-demo:${{ github.sha }}
