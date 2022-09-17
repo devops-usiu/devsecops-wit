@@ -93,6 +93,7 @@ jobs:
         template: '@/contrib/sarif.tpl'
         output: 'trivy-docker-results.sarif'
         severity: 'CRITICAL,HIGH,MEDIUM,LOW'
+        vuln-type: 'library'
 
     - name: Upload Trivy Docker Scan results to GitHub Security tab
       uses: github/codeql-action/upload-sarif@v2
@@ -106,7 +107,7 @@ jobs:
       with:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: eu-west-1
+        aws-region: us-east-1
 
     - name: Login to Ecr Repository
       id: login-to-ecr
