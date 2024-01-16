@@ -1,8 +1,8 @@
 # For Java 11, try this
-FROM fabric8/java-alpine-openjdk11-jre:1.9.0
-EXPOSE  8080
+FROM adoptopenjdk/openjdk11:alpine-jre
+
 # Refer to Maven build -> final name extra
-ARG JAR_FILE=target/ms-devsecops-wit-0.0.1-SNAPSHOT.jar
+ARG JAR_FILE=target/spring-boot-api-example-0.0.1-SNAPSHOT.jar
 
 # cd /opt/app
 WORKDIR /opt/app
